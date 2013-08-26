@@ -108,5 +108,13 @@ $t = array(
 		'no' => 'Laget av ',
 		'en' => 'Made by ',
 	),
+	'Sporingsdata levert av ' => array(
+		'no' => 'Sporingsdata levert av ',
+		'en' => 'Tracking data provided by ',
+	),
+	'Kildekode tilgjengelig under ' => array(
+		'no' => 'Kildekode tilgjengelig under ',
+		'en' => 'Sourcecode available under',
+	),
 );
 ?>

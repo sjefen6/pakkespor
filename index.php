@@ -380,18 +380,10 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 			<div style="text-align: center; margin-top: 30px;" class="noPrint">
 				<p>
 					<?php echo $t["Laget av "][$lang]; ?><a href="http://www.sjefen6.no" target="_blank">@sjefen6</a>
-					<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow on twitter</a>
-					<script>
-						! function(d, s, id) {
-							var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-							if (!d.getElementById(id)) {
-								js = d.createElement(s);
-								js.id = id;
-								js.src = p + '://platform.twitter.com/widgets.js';
-								fjs.parentNode.insertBefore(js, fjs);
-							}
-						}(document, 'script', 'twitter-wjs'); 
-					</script>
+					<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow on twitter</a><br>
+					<?php echo $t["Sporingsdata levert av "][$lang]; ?> <a href="http://www.posten.no" targer="_blank">posten.no</a>/<a href="http://www.bring.com" targer="_blank">bring.com</a><br>
+					<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?> <a href="/LICENSE" targer="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a>
+					
 				</p>
 				<script>
 				  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -414,6 +406,17 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				</script>
 				<script type="text/javascript"
 				src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+				<script>
+					! function(d, s, id) {
+						var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+						if (!d.getElementById(id)) {
+							js = d.createElement(s);
+							js.id = id;
+							js.src = p + '://platform.twitter.com/widgets.js';
+							fjs.parentNode.insertBefore(js, fjs);
+						}
+					}(document, 'script', 'twitter-wjs'); 
+				</script>
 			</div>
 		</div><!-- /container -->
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
