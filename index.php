@@ -137,6 +137,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 		<!-- Bootstrap -->
 		<link rel="stylesheet" type="text/css" media="screen" href="/bs/css/bootstrap.min.css" >
 		<link rel="stylesheet" type="text/css" media="print" href="/bs/css/bootstrap.min.css">
+		<meta name="description" content="<?php echo $t["meta description"][$lang]; ?>">
 		<style type="text/css">
 			div {
 				/*border:1px solid black;*/
@@ -234,7 +235,11 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 								<div class="row-fluid">
 									<div class="alert span12 alert-error">
 										<p><?php echo $t["Feils&oslash;kings info"][$lang]; ?>:</p>
-										<pre><?php var_dump($shipment) ?></pre>
+										<pre>Input: <?php 
+											echo $trackingNumber . "\n";
+											var_dump($shipment);
+										?>
+										</pre>
 									</div>
 								</div>
 								<?php
@@ -353,7 +358,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 												</ul>
 												<div class="tab-content">
 												  <div class="tab-pane active" style="text-align: center; height: 150px;" id="barcode<?php echo $package["packageNumber"]; ?>">
-												  	<img style="border:0px solid black;" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package["packageNumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
+												  	<img style="border:0px solid black; height: 100px; width: 330px" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package["packageNumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
 												  </div>
 												  <div class="tab-pane" style="text-align: center; height: 150px;" id="qr<?php echo $package["packageNumber"]; ?>">
 												  	<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; ?><?php echo $package["packageNumber"]; ?> " src="<?php echo getQRCode($package["packageNumber"]); ?>" />
@@ -382,7 +387,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 					<?php echo $t["Laget av "][$lang]; ?><a href="http://www.sjefen6.no" target="_blank">@sjefen6</a>
 					<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow on twitter</a><br>
 					<?php echo $t["Sporingsdata levert av "][$lang]; ?> <a href="http://www.posten.no" targer="_blank">posten.no</a>/<a href="http://www.bring.com" targer="_blank">bring.com</a><br>
-					<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?> <a href="/LICENSE" targer="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a>
+					<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?> <a href="/LICENSE" targer="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a> - <a href="/README.md" targer="_blank">readme</a>
 					
 				</p>
 				<script>

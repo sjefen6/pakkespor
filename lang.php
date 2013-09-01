@@ -4,6 +4,10 @@ $t = array(
 		'no' => 'Pakkesporing for Posten/Bring',
 		'en' => 'Mailtracker for the Norwegian postal service',
 	),
+	'meta description' => array(
+		'no' => 'Enkel pakkesporing for Posten/Bring som husker sporingsnummeret og genererer strekkoder som kan brukes i mobile apper.',
+		'en' => 'Mailtracker for the Norwegian postal service that remebers the tracking number and generates barcodes for mobile apps.',
+	),
 	'Sporingsnummer' => array(
 		'no' => 'Sporingsnummer',
 		'en' => 'Tracking number',
