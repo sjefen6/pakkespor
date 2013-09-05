@@ -208,9 +208,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 							<button class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-qrcode"></i></button>
 							<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
 								<li>
-									<a href="<?php echo getFullURL(implode(";", $trackingNumbers)) ?>">
-										<img style="border:0px solid black;" alt="QR-Code for <?php echo $package["consignmentId"]; ?> " src="<?php echo getFullQRCode(implode(";", $trackingNumbers)); ?>" /><br>
-									</a>
+									<a href="<?php echo getFullURL(implode(";", $trackingNumbers)) ?>" style="height:150px; margin:0px; padding: 0px; background-image:url('<?php echo getFullQRCode(implode(";", $trackingNumbers)); ?>');"></a>
 								</li>
 							</ul>
 						</li>
@@ -386,6 +384,13 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				<p>
 					<?php echo $t["Laget av "][$lang]; ?><a href="http://www.sjefen6.no" target="_blank">@sjefen6</a>
 					<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow on twitter</a><br>
+					<div class="fb-like" data-href="http://www.pakkespor.no" data-width="75" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+					<div style="display: inline-block; width: 60px; height: 25px;">
+						<div class="g-plusone" data-size="medium"></div>
+					</div>
+					<div style="display: inline-block; width: 83px; height: 25px;">
+						<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.pakkespor.no" data-text="<?php echo $t["twitter melding"][$lang]; ?>" data-lang="<?php echo $lang; ?>">Tweet</a>
+					</div><br>
 					<?php echo $t["Sporingsdata levert av "][$lang]; ?> <a href="http://www.posten.no" targer="_blank">posten.no</a>/<a href="http://www.bring.com" targer="_blank">bring.com</a><br>
 					<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?> <a href="/LICENSE" targer="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a> - <a href="/README.md" targer="_blank">readme</a>
 					
@@ -421,6 +426,23 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 							fjs.parentNode.insertBefore(js, fjs);
 						}
 					}(document, 'script', 'twitter-wjs'); 
+				</script>
+				<div id="fb-root"></div>
+				<script>(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) return;
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/nb_NO/all.js#xfbml=1&appId=159452564099998";
+				  fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));</script>
+				<script type="text/javascript">
+				  window.___gcfg = {lang: '<?php echo $lang; ?>'};
+				
+				  (function() {
+				    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				    po.src = 'https://apis.google.com/js/plusone.js';
+				    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+				  })();
 				</script>
 			</div>
 		</div><!-- /container -->

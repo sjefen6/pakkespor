@@ -112,6 +112,10 @@ $t = array(
 		'no' => 'Laget av ',
 		'en' => 'Made by ',
 	),
+	'twitter melding' => array(
+		'no' => 'Jeg sporer pakken min via ',
+		'en' => 'I am tracking my package with ',
+	),
 	'Sporingsdata levert av ' => array(
 		'no' => 'Sporingsdata levert av ',
 		'en' => 'Tracking data provided by ',
