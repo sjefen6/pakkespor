@@ -383,7 +383,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 			<div style="text-align: center; margin-top: 30px;" class="noPrint">
 				<p>
 					<?php echo $t["Laget av "][$lang]; ?><a href="http://www.sjefen6.no" target="_blank">@sjefen6</a>
-					<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow on twitter</a><br>
+					<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="<?php echo $lang; ?>"><?php echo $t["F&oslash;lg"][$lang]; ?></a><br>
 					<div class="fb-like" data-href="http://www.pakkespor.no" data-width="75" data-layout="button_count" data-show-faces="false" data-send="false"></div>
 					<div style="display: inline-block; width: 60px; height: 25px;">
 						<div class="g-plusone" data-size="medium"></div>
