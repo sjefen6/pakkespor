@@ -393,12 +393,28 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 					</div><br>
 					<?php echo $t["Sporingsdata levert av "][$lang]; ?> <a href="http://www.posten.no" targer="_blank">posten.no</a>/<a href="http://www.bring.com" targer="_blank">bring.com</a><br>
 					<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?> <a href="/LICENSE" targer="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a> - <a href="/README.md" targer="_blank">readme</a>
-					
 				</p>
+				<!-- Google Adsense -->
+				<script type="text/javascript">
+					<!--
+					google_ad_client ="ca-pub-4079891243190921";
+					/* tracking */
+					google_ad_slot = "5329852473";
+					google_ad_width = 468;
+					google_ad_height = 60;
+					//-->
+				</script>
+				<script type="text/javascript"
+				src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 			</div>
 		</div><!-- /container -->
+		<!-- jquery -->
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		
+		<!-- bootstrap -->
 		<script src="/bs/js/bootstrap.min.js"></script>
+		
+		<!-- Google Analytics -->
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -409,17 +425,8 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 		  ga('send', 'pageview');
 		
 		</script>
-		<script type="text/javascript">
-			<!--
-			google_ad_client ="ca-pub-4079891243190921";
-			/* tracking */
-			google_ad_slot = "5329852473";
-			google_ad_width = 468;
-			google_ad_height = 60;
-			//-->
-		</script>
-		<script type="text/javascript"
-		src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+		
+		<!-- twitter -->
 		<script>
 			! function(d, s, id) {
 				var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
@@ -431,6 +438,8 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				}
 			}(document, 'script', 'twitter-wjs'); 
 		</script>
+		
+		<!-- facebook -->
 		<div id="fb-root"></div>
 		<script>(function(d, s, id) {
 		  var js, fjs = d.getElementsByTagName(s)[0];
@@ -439,6 +448,8 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 		  js.src = "//connect.facebook.net/nb_NO/all.js#xfbml=1&appId=159452564099998";
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));</script>
+		
+		<!-- Google Plus -->
 		<script type="text/javascript">
 		  window.___gcfg = {lang: '<?php echo $lang; ?>'};
 		
