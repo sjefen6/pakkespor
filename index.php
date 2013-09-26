@@ -19,7 +19,6 @@ if (!empty($_COOKIE["trackingNumbers"])) {
 if (!empty($_GET["trackingNumbers"])) {
 	$get = cleanString($_GET["trackingNumbers"]);
 	$trackingNumbers = array_merge($trackingNumbers, explode(";", $get));
-	header("Location: /", TRUE, 307);
 }
 
 if (!empty($_GET["remove"])) {
@@ -34,8 +33,6 @@ if (!empty($_GET["remove"])) {
 	if (empty($trackingNumbers)) {
 		setcookie("trackingNumbers", "", time() - 3600);
 	}
-
-	header("Location: /", TRUE, 307);
 }
 
 if (!empty($_GET["autorefresh"])) {
@@ -50,8 +47,6 @@ if (!empty($_GET["autorefresh"])) {
 	}
 
 	setcookie("autorefresh", $autorefresh, time() + $cookielifetime);
-
-	header("Location: /", TRUE, 307);
 }
 
 if (!empty($_POST["trackingNumber"])) {
@@ -69,10 +64,11 @@ if (!empty($trackingNumbers)) {
 	//remove dupes
 	$trackingNumbers = array_unique($trackingNumbers);
 	$cookie = implode(";", $trackingNumbers);
-	setcookie("trackingNumbers", $cookie, time() + 1209600);
+	setcookie("trackingNumbers", $cookie, time() + $cookielifetime);
 }
-if (!empty($_GET)) {
-	header("Location: /", TRUE, 307);
+
+if (!empty($_GET) || !empty($_POST)) {
+	header("Location: /", TRUE, 303);
 	exit ;
 }
 
