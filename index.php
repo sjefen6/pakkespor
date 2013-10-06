@@ -221,7 +221,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 					?>
 					<div class="row-fluid">
 						<div class="shipment span12" style="min-width: 433px;">
-							<span><?php echo $t["Sending"][$lang]; ?>: <?php echo $shipment["consignmentId"]; ?></span>
+							<span><?php echo $t["Sending"][$lang]; ?>: <?php echo (!empty($shipment["consignmentId"]) ? $shipment["consignmentId"] : $trackingNumber)  ; ?></span>
 							<a href="/?remove=<?php echo $trackingNumber; ?>" type="button" class="close noPrint" aria-hidden="true">&times;</a>
 							<?php
 							if(!empty($shipment["error"])){
