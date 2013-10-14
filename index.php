@@ -8,12 +8,24 @@ $lang = "no";
 $cookielifetime = 1209600;
 
 $trackingNumbers = array();
+$trackingNumbers_json = array();
+
 
 $autorefresh = htmlspecialchars($_COOKIE["autorefresh"]);
 
 if (!empty($_COOKIE["trackingNumbers"])) {
 	$cookie = cleanString($_COOKIE["trackingNumbers"]);
-	$trackingNumbers = array_merge($trackingNumbers, explode(";", $cookie));
+	$cookie = explode(";", $cookie);
+	$trackingNumbers = array_merge($trackingNumbers, $cookie);
+
+	foreach ($cookie as $key => $value) {
+		$trackingNumbers_json[] = array( 'trackingnumber' => $value,);
+	}
+}
+
+if (!empty($_COOKIE["trackingNumbers_json"])) {
+        $incoming = (array) json_decode($_COOKIE["trackingNumbers_json"]);
+	$trackingNumbers_json = array_merge($trackingNumbers_json, $incoming);
 }
 
 if (!empty($_GET["trackingNumbers"])) {
@@ -21,17 +33,36 @@ if (!empty($_GET["trackingNumbers"])) {
 	$trackingNumbers = array_merge($trackingNumbers, explode(";", $get));
 }
 
+if (!empty($_GET["json"])) {
+	$incoming = (array) json_decode($_GET["json"]);
+	$trackingNumbers_json = array_merge($trackingNumbers_json, $incoming);
+}
+
+
 if (!empty($_GET["remove"])) {
 	$get = htmlspecialchars($_GET["remove"]);
 
+	//OLD, for dsv removed 14 days after json implementation
 	foreach ($trackingNumbers as $key => $value) {
 		if ($value == $get) {
 			unset($trackingNumbers[$key]);
 		}
 	}
 
+	//JSON
+        foreach ($trackingNumbers_json as $key => $value) {
+                if ($value["trackingnumber"] == $get) {
+                        unset($trackingNumbers_json[$key]);
+                }
+        }
+
+
 	if (empty($trackingNumbers)) {
 		setcookie("trackingNumbers", "", time() - 3600);
+	}
+
+	if (empty($trackingNumbers_json)) {
+		setcookie("trackingNumbers_json", "", time() - 3600);
 	}
 }
 
@@ -51,10 +82,27 @@ if (!empty($_GET["autorefresh"])) {
 
 if (!empty($_POST["trackingNumber"])) {
 	$post = cleanString($_POST["trackingNumber"]);
-	
-	$trackingNumbers = array_merge ( $trackingNumbers, explode(";", $post));
+
+	$post = explode(";", $post);
+
+	$trackingNumbers = array_merge ( $trackingNumbers, $post);
+
+	foreach ($post as $key => $value) {
+		$trackingNumbers_json[] = array( 'trackingnumber' => $value,);
+	}
 }
 // array_push($trackingNumbers, "TESTPACKAGE-AT-PICKUPPOINT");
+
+if (!empty($_POST["shipmentName"]) && !empty($_POST["trackingnumberToName"])) {
+	//Yeah, this will never be refreshed
+	setcookie(htmlspecialchars($_POST["trackingnumberToName"]), htmlspecialchars($_POST["shipmentName"]), time() + $cookielifetime);
+
+	foreach ($trackingNumbers_json as $package) {
+		if ($package["trackingnumber"] == $_POST["trackingnumberToName"]) {
+			$package["name"] = htmlspecialchars($_POST["shipmentName"]);
+		}
+	}
+}
 
 if (!empty($trackingNumbers)) {
 	//trim all strings
@@ -67,6 +115,33 @@ if (!empty($trackingNumbers)) {
 	setcookie("trackingNumbers", $cookie, time() + $cookielifetime);
 }
 
+if (!empty($trackingNumbers_json)) {
+	//trim all strings
+	//$trackingNumbers_json = array_map('trim', $trackingNumbers_json);
+	//remove null and false
+	//$trackingNumbers_json = array_filter($trackingNumbers_json);
+	//remove dupes
+	//$trackingNumbers_json = array_unique($trackingNumbers_json);
+
+	foreach ($trackingNumbers_json as $packageID => $package) {
+		$trackingNumbers_json[$packageID]["trackingnumber"] = trim($package["trackingnumber"]);
+		if (!is_array($package) || !is_string($package["trackingnumber"]) || $package["trackingnumber"] != '') {
+			unset($trackingNumbers_json[$packageID]);
+		} else {
+			foreach ($trackingNumbers_json as $packageID2 => $package2) {
+				if ($packageID !== $packageID2 && $package["trackingnumber"] == $package2["trackingnumber"])
+					unset($trackingNumbers_json[$packageID2]);
+			}
+		}
+	}
+
+
+	//ugh, cleaning up the array is a pain when it is deeper
+	//TODO: Cleam up the array
+
+	setcookie("trackingNumbers_json", json_encode($trackingNumbers_json), time() + $cookielifetime);
+}
+
 if (!empty($_GET) || !empty($_POST)) {
 	header("Location: /", TRUE, 303);
 	exit ;
@@ -75,19 +150,20 @@ if (!empty($_GET) || !empty($_POST)) {
 function getTrackingInfo($trNumber) {
 	// 158.39.116.232/
 	$json_url = "http://sporing.bring.no/sporing.json?lang=" . $lang . "&q=" . $trNumber;
-	
-	/*$ctx=stream_context_create(array('http'=>
-    	array(
-        	'timeout' => 34 // 20 minutes
-    	)
-	));
-	
-	$json = file_get_contents($json_url, FALSE, $ctx);*/
-	
-	$json = file_get_contents($json_url);
-	
+
+	$ctx = stream_context_create(array(
+	    'http' => array(
+	        'timeout' => 30
+	        )
+	    )
+	);
+
+	$json = file_get_contents($json_url, FALSE, $ctx);
+
+	//$json = file_get_contents($json_url);
+
 	// var_dump($json);
-	
+
 	return json_decode($json, TRUE);
 }
 
@@ -221,7 +297,11 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 					?>
 					<div class="row-fluid">
 						<div class="shipment span12" style="min-width: 433px;">
-							<span><?php echo $t["Sending"][$lang]; ?>: <?php echo (!empty($shipment["consignmentId"]) ? $shipment["consignmentId"] : $trackingNumber); ?></span>
+							<span><?php
+								echo $t["Sending"][$lang]; ?>: <?php
+								echo (!empty($shipment["consignmentId"]) ? $shipment["consignmentId"] : $trackingNumber);
+								echo (!empty($_COOKIE[$trackingNumber]) ? " - " . htmlspecialchars($_COOKIE[$trackingNumber]) : "");
+							 ?></span>
 							<a href="/?remove=<?php echo $trackingNumber; ?>" type="button" class="close noPrint" aria-hidden="true">&times;</a>
 							<?php
 							if(!empty($shipment["error"])){
@@ -314,6 +394,17 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 																		echo $package["country"];
 																?></td>
 															</tr>
+                                                                                                                        <tr>
+                                                                                                                                <th><?php echo $t["Sendingsnavn"][$lang]; ?>:</th>
+                                                                                                                                <td style="padding: 0px;">
+																	<form class="form-inline" style="margin-bottom: 0px;" method="post">
+																		<input id="shipmentName" name="shipmentName" type="text" class="input-small" placeholder="<?php echo $t["Navn"][$lang]; ?>" value="<?php echo cleanString($_COOKIE[$trackingNumber]); ?>">
+																		<input id="trackingnumberToName" name="trackingnumberToName" type="hidden" value="<?php echo $trackingNumber; ?>" >
+																		<button type="submit" class="btn"><?php echo $t["Lagre"][$lang]; ?></button>
+																	</form>
+																</td>
+                                                                                                                        </tr>
+
 														</table>
 													</div>
 												</div>

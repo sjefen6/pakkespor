@@ -128,5 +128,17 @@ $t = array(
 		'no' => 'Kildekode tilgjengelig under ',
 		'en' => 'Sourcecode available under',
 	),
+	'Sendingsnavn' => array(
+		'no' => 'Sendingsnavn',
+		'en' => 'Shipments name',
+	),
+	'Navn' => array(
+		'no' => 'Navn',
+		'en' => 'Name',
+	),
+	'Lagre' => array(
+		'no' => 'Lagre',
+		'en' => 'Store',
+	),
 );
 ?>
