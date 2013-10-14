@@ -11,33 +11,30 @@ $trackingNumbers = array();
 $trackingNumbers_json = array();
 
 
-$autorefresh = htmlspecialchars($_COOKIE["autorefresh"]);
+$autorefresh = htmlspecialchars(@$_COOKIE["autorefresh"]);
 
-if (!empty($_COOKIE["trackingNumbers"])) {
-	$cookie = cleanString($_COOKIE["trackingNumbers"]);
-	$cookie = explode(";", $cookie);
-	$trackingNumbers = array_merge($trackingNumbers, $cookie);
-
-	foreach ($cookie as $key => $value) {
-		$trackingNumbers_json[] = array( 'trackingnumber' => $value,);
+if (!empty($_COOKIE["trackingNumbers_json"])) {
+	$incoming = json_decode($_COOKIE["trackingNumbers_json"], true);
+	foreach ($incoming as $package){
+		addTrackingNumber($package["trackingnumber"], $package["name"]);
 	}
 }
 
-if (!empty($_COOKIE["trackingNumbers_json"])) {
-        $incoming = (array) json_decode($_COOKIE["trackingNumbers_json"]);
-	$trackingNumbers_json = array_merge($trackingNumbers_json, $incoming);
+if (!empty($_GET["json"])){
+	$incoming = json_decode(@$_GET["json"], true);
+	foreach ($incoming as $package)
+		addTrackingNumber($package["trackingnumber"], $package["name"]);
 }
 
-if (!empty($_GET["trackingNumbers"])) {
-	$get = cleanString($_GET["trackingNumbers"]);
-	$trackingNumbers = array_merge($trackingNumbers, explode(";", $get));
-}
+if (!empty($_COOKIE["trackingNumbers"]) || !empty($_GET["trackingNumbers"]) || !empty($_POST["trackingNumber"])) {
+	$input = cleanString(@$_COOKIE["trackingNumbers"] . ";" . @$_GET["trackingNumbers"] . ";" . @$_POST["trackingNumber"]);
+	$input = explode(";", $input);
+	$trackingNumbers = array_merge($trackingNumbers, $input);
 
-if (!empty($_GET["json"])) {
-	$incoming = (array) json_decode($_GET["json"]);
-	$trackingNumbers_json = array_merge($trackingNumbers_json, $incoming);
+	//Adds dsv values to json
+	foreach ($trackingNumbers as $trackingnumber)
+		addTrackingNumber($trackingnumber);
 }
-
 
 if (!empty($_GET["remove"])) {
 	$get = htmlspecialchars($_GET["remove"]);
@@ -80,26 +77,14 @@ if (!empty($_GET["autorefresh"])) {
 	setcookie("autorefresh", $autorefresh, time() + $cookielifetime);
 }
 
-if (!empty($_POST["trackingNumber"])) {
-	$post = cleanString($_POST["trackingNumber"]);
-
-	$post = explode(";", $post);
-
-	$trackingNumbers = array_merge ( $trackingNumbers, $post);
-
-	foreach ($post as $key => $value) {
-		$trackingNumbers_json[] = array( 'trackingnumber' => $value,);
-	}
-}
-// array_push($trackingNumbers, "TESTPACKAGE-AT-PICKUPPOINT");
 
 if (!empty($_POST["shipmentName"]) && !empty($_POST["trackingnumberToName"])) {
 	//Yeah, this will never be refreshed
 	setcookie(htmlspecialchars($_POST["trackingnumberToName"]), htmlspecialchars($_POST["shipmentName"]), time() + $cookielifetime);
 
-	foreach ($trackingNumbers_json as $package) {
+	foreach ($trackingNumbers_json as $packageID => $package) {
 		if ($package["trackingnumber"] == $_POST["trackingnumberToName"]) {
-			$package["name"] = htmlspecialchars($_POST["shipmentName"]);
+			$trackingNumbers_json[$packageID]["name"] = htmlspecialchars($_POST["shipmentName"]);
 		}
 	}
 }
@@ -116,29 +101,7 @@ if (!empty($trackingNumbers)) {
 }
 
 if (!empty($trackingNumbers_json)) {
-	//trim all strings
-	//$trackingNumbers_json = array_map('trim', $trackingNumbers_json);
-	//remove null and false
-	//$trackingNumbers_json = array_filter($trackingNumbers_json);
-	//remove dupes
-	//$trackingNumbers_json = array_unique($trackingNumbers_json);
-
-	foreach ($trackingNumbers_json as $packageID => $package) {
-		$trackingNumbers_json[$packageID]["trackingnumber"] = trim($package["trackingnumber"]);
-		if (!is_array($package) || !is_string($package["trackingnumber"]) || $package["trackingnumber"] != '') {
-			unset($trackingNumbers_json[$packageID]);
-		} else {
-			foreach ($trackingNumbers_json as $packageID2 => $package2) {
-				if ($packageID !== $packageID2 && $package["trackingnumber"] == $package2["trackingnumber"])
-					unset($trackingNumbers_json[$packageID2]);
-			}
-		}
-	}
-
-
-	//ugh, cleaning up the array is a pain when it is deeper
-	//TODO: Cleam up the array
-
+	//We have clean input. Cleanup not needed.
 	setcookie("trackingNumbers_json", json_encode($trackingNumbers_json), time() + $cookielifetime);
 }
 
@@ -148,6 +111,8 @@ if (!empty($_GET) || !empty($_POST)) {
 }
 
 function getTrackingInfo($trNumber) {
+	global $lang;
+
 	// 158.39.116.232/
 	$json_url = "http://sporing.bring.no/sporing.json?lang=" . $lang . "&q=" . $trNumber;
 
@@ -193,6 +158,30 @@ function cleanString($data){
 	$data = str_replace(array(",", "+", ":", " ", ".", "\\", "/"), ";", $data);
 	return $data;
 }
+
+function addTrackingNumber($trackingnumber, $name = ""){
+	global $trackingNumbers_json;
+
+	$trackingnumber = trim($trackingnumber);
+
+	if(strlen($trackingnumber) >= 1) {
+
+		$notADupe = true;
+		foreach ($trackingNumbers_json as $packageID => $package) {
+			if ($package["trackingnumber"] == $trackingnumber)
+				$notADupe = false;
+		}
+
+		if($notADupe)
+			$trackingNumbers_json[] = array(
+				"trackingnumber" => $trackingnumber,
+				"name" => $name,
+				);
+
+	}
+}
+
+
 if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 	header("Location: http://www.pakkespor.no//?trackingNumbers=" . implode(";", $trackingNumbers), TRUE, 307);
 ?>
@@ -345,9 +334,9 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 												</table>
 												<div class="accordion-group">
 													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $package["packageNumber"]; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $trackingNumber; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
 													</div>
-													<div id="collapseDetails<?php echo $package["packageNumber"]; ?>" class="accordion-body collapse">
+													<div id="collapseDetails<?php echo $trackingNumber; ?>" class="accordion-body collapse">
 														<table class="table">
 															<tr>
 																<th><?php echo $t["Sendings nummer"][$lang]; ?>:</th>
@@ -398,7 +387,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
                                                                                                                                 <th><?php echo $t["Sendingsnavn"][$lang]; ?>:</th>
                                                                                                                                 <td style="padding: 0px;">
 																	<form class="form-inline" style="margin-bottom: 0px;" method="post">
-																		<input id="shipmentName" name="shipmentName" type="text" class="input-small" placeholder="<?php echo $t["Navn"][$lang]; ?>" value="<?php echo cleanString($_COOKIE[$trackingNumber]); ?>">
+																		<input id="shipmentName" name="shipmentName" type="text" class="input-small" placeholder="<?php echo $t["Navn"][$lang]; ?>" value="<?php echo htmlspecialchars($_COOKIE[$trackingNumber]); ?>">
 																		<input id="trackingnumberToName" name="trackingnumberToName" type="hidden" value="<?php echo $trackingNumber; ?>" >
 																		<button type="submit" class="btn"><?php echo $t["Lagre"][$lang]; ?></button>
 																	</form>
@@ -410,9 +399,9 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 												</div>
 												<div class="accordion-group">
 													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $package["packageNumber"]; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $trackingNumber; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
 													</div>
-													<div id="collapseShipping<?php echo $package["packageNumber"]; ?>" class="accordion-body collapse in">
+													<div id="collapseShipping<?php echo $trackingNumber; ?>" class="accordion-body collapse in">
 														<table class="table-striped">
 															<tr>
 																<th><?php echo $t["Hendelse"][$lang]; ?></th>
@@ -454,7 +443,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 												</div>
 												<script>
 													$(function () {
-														$('#codes<?php echo $package["packageNumber"]; ?>
+														$('#codes<?php echo $trackingNumber; ?>
 														a:last').tab('show');
 													})
 												</script>
