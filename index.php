@@ -10,7 +10,6 @@ $cookielifetime = 1209600;
 $trackingNumbers = array();
 $trackingNumbers_json = array();
 
-
 $autorefresh = htmlspecialchars(@$_COOKIE["autorefresh"]);
 
 if (!empty($_COOKIE["trackingNumbers_json"])) {
@@ -21,7 +20,7 @@ if (!empty($_COOKIE["trackingNumbers_json"])) {
 }
 
 if (!empty($_GET["json"])){
-	$incoming = json_decode(@$_GET["json"], true);
+	$incoming = json_decode(base64_decode(@$_GET["json"]), true);
 	foreach ($incoming as $package)
 		addTrackingNumber($package["trackingnumber"], $package["name"]);
 }
@@ -77,27 +76,12 @@ if (!empty($_GET["autorefresh"])) {
 	setcookie("autorefresh", $autorefresh, time() + $cookielifetime);
 }
 
-
 if (!empty($_POST["shipmentName"]) && !empty($_POST["trackingnumberToName"])) {
-	//Yeah, this will never be refreshed
-	setcookie(htmlspecialchars($_POST["trackingnumberToName"]), htmlspecialchars($_POST["shipmentName"]), time() + $cookielifetime);
-
 	foreach ($trackingNumbers_json as $packageID => $package) {
 		if ($package["trackingnumber"] == $_POST["trackingnumberToName"]) {
 			$trackingNumbers_json[$packageID]["name"] = htmlspecialchars($_POST["shipmentName"]);
 		}
 	}
-}
-
-if (!empty($trackingNumbers)) {
-	//trim all strings
-	$trackingNumbers = array_map('trim', $trackingNumbers);
-	//remove null and false
-	$trackingNumbers = array_filter($trackingNumbers);
-	//remove dupes
-	$trackingNumbers = array_unique($trackingNumbers);
-	$cookie = implode(";", $trackingNumbers);
-	setcookie("trackingNumbers", $cookie, time() + $cookielifetime);
 }
 
 if (!empty($trackingNumbers_json)) {
@@ -150,7 +134,7 @@ function getFullQRCode($data) {
 
 function getFullURL($data) {
 	$https = isset($_SERVER['HTTPS']);
-	return ($https ? "https://" : "http://") . $_SERVER['SERVER_NAME'] . "/?trackingNumbers=" . $data;
+	return ($https ? "https://" : "http://") . $_SERVER['SERVER_NAME'] . "/?json=" . $data;
 }
 
 function cleanString($data){
@@ -172,18 +156,19 @@ function addTrackingNumber($trackingnumber, $name = ""){
 				$notADupe = false;
 		}
 
-		if($notADupe)
-			$trackingNumbers_json[] = array(
-				"trackingnumber" => $trackingnumber,
-				"name" => $name,
-				);
+		if($notADupe){
+			$temp = array("trackingnumber" => $trackingnumber,);
 
+			if (strlen($name) >= 1)
+				$temp["name"] = $name;
+
+			$trackingNumbers_json[] = $temp;
+		}
 	}
 }
 
-
 if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
-	header("Location: http://www.pakkespor.no//?trackingNumbers=" . implode(";", $trackingNumbers), TRUE, 307);
+	header("Location: http://www.pakkespor.no/?json=" . urlencode(base64_encode(json_encode($trackingNumbers_json))), TRUE, 307);
 ?>
 <!DOCTYPE html>
 <html>
@@ -230,7 +215,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				*zoom: 1; /* hasLayout ie7 trigger */
 				vertical-align: top;
 			}
-			
+
 			.twitter-follow-button {
 				margin-bottom: -5px;
 			}
@@ -247,9 +232,9 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 			<!-- Menu -->
 			<div class="navbar navbar-static noPrint">
 				<div class="plz-center" style="margin: 0 auto; text-align: center; width: 433px;">
-					<form class="navbar-search" method="post">
+					<form class="navbar-search" method="get">
 						<div class="input-append">
-							<input id="trackingNumber" name="trackingNumber" class="input" type="text" placeholder="<?php echo $t["Sporingsnummer"][$lang]; ?>">
+							<input id="trackingNumbers" name="trackingNumbers" class="input" type="text" placeholder="<?php echo $t["Sporingsnummer"][$lang]; ?>">
 							<button type="submit" class="btn">
 								<?php echo $t["S&oslash;k"][$lang]; ?>
 							</button>
@@ -269,7 +254,11 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 							<button class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-qrcode"></i></button>
 							<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
 								<li>
-									<a href="<?php echo getFullURL(implode(";", $trackingNumbers)) ?>" style="height:150px; margin:0px; padding: 0px; background-image:url('<?php echo getFullQRCode(implode(";", $trackingNumbers)); ?>');"></a>
+									<a href="<?php
+										echo getFullURL(urlencode(base64_encode(json_encode($trackingNumbers_json))));
+										?>" style="height:150px; margin:0px; padding: 0px; background-image:url('<?php
+										echo getFullQRCode(urlencode(base64_encode(json_encode($trackingNumbers_json))));
+										?>');"></a>
 								</li>
 							</ul>
 						</li>
@@ -277,8 +266,8 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				</div>
 			</div>
 			<?php
-			foreach ($trackingNumbers as $trackingNumber) {
-				$shipments = getTrackingInfo($trackingNumber);
+			foreach ($trackingNumbers_json as $package_object) {
+				$shipments = getTrackingInfo($package_object["trackingnumber"]);
 				// var_dump($trackingNumber);
 				// var_dump($shipment);
 				// Foreach shipment (usually only 1)
@@ -288,10 +277,10 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 						<div class="shipment span12" style="min-width: 433px;">
 							<span><?php
 								echo $t["Sending"][$lang]; ?>: <?php
-								echo (!empty($shipment["consignmentId"]) ? $shipment["consignmentId"] : $trackingNumber);
-								echo (!empty($_COOKIE[$trackingNumber]) ? " - " . htmlspecialchars($_COOKIE[$trackingNumber]) : "");
+								echo (!empty($shipment["consignmentId"]) ? $shipment["consignmentId"] : $package_object["trackingnumber"]);
+								echo (!empty($package_object["name"]) ? " - " . htmlspecialchars($package_object["name"]) : "");
 							 ?></span>
-							<a href="/?remove=<?php echo $trackingNumber; ?>" type="button" class="close noPrint" aria-hidden="true">&times;</a>
+							<a href="/?remove=<?php echo $package_object["trackingnumber"]; ?>" type="button" class="close noPrint" aria-hidden="true">&times;</a>
 							<?php
 							if(!empty($shipment["error"])){
 								?>
@@ -334,9 +323,9 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 												</table>
 												<div class="accordion-group">
 													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $trackingNumber; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
 													</div>
-													<div id="collapseDetails<?php echo $trackingNumber; ?>" class="accordion-body collapse">
+													<div id="collapseDetails<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse">
 														<table class="table">
 															<tr>
 																<th><?php echo $t["Sendings nummer"][$lang]; ?>:</th>
@@ -387,21 +376,20 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
                                                                                                                                 <th><?php echo $t["Sendingsnavn"][$lang]; ?>:</th>
                                                                                                                                 <td style="padding: 0px;">
 																	<form class="form-inline" style="margin-bottom: 0px;" method="post">
-																		<input id="shipmentName" name="shipmentName" type="text" class="input-small" placeholder="<?php echo $t["Navn"][$lang]; ?>" value="<?php echo htmlspecialchars($_COOKIE[$trackingNumber]); ?>">
-																		<input id="trackingnumberToName" name="trackingnumberToName" type="hidden" value="<?php echo $trackingNumber; ?>" >
+																		<input id="shipmentName" name="shipmentName" type="text" class="input-small" placeholder="<?php echo $t["Navn"][$lang]; ?>" value="<?php echo htmlspecialchars($package_object["name"]); ?>">
+																		<input id="trackingnumberToName" name="trackingnumberToName" type="hidden" value="<?php echo $package_object["trackingnumber"]; ?>" >
 																		<button type="submit" class="btn"><?php echo $t["Lagre"][$lang]; ?></button>
 																	</form>
 																</td>
                                                                                                                         </tr>
-
 														</table>
 													</div>
 												</div>
 												<div class="accordion-group">
 													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $trackingNumber; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
 													</div>
-													<div id="collapseShipping<?php echo $trackingNumber; ?>" class="accordion-body collapse in">
+													<div id="collapseShipping<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse in">
 														<table class="table-striped">
 															<tr>
 																<th><?php echo $t["Hendelse"][$lang]; ?></th>
@@ -426,24 +414,28 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 											</div>
 											<div class="span6">
 												<ul class="nav nav-tabs" style="margin-bottom: 0px;" id="codes<?php echo $package["packageNumber"]; ?>">
-												  <li class="active"><a data-toggle="tab" href="#barcode<?php echo $package["packageNumber"]; ?>"><?php echo $t["Strekkode"][$lang]; ?></a></li>
-												  <li><a data-toggle="tab" href="#qr<?php echo $package["packageNumber"]; ?>"><?php echo $t["Sporings QR"][$lang]; ?></a></li>
-												  <li><a data-toggle="tab" href="#fullqr<?php echo $package["packageNumber"]; ?>"><?php echo $t["Bokmerke QR"][$lang]; ?></a></li>
+												  <li class="active"><a data-toggle="tab" href="#barcode<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Strekkode"][$lang]; ?></a></li>
+												  <li><a data-toggle="tab" href="#qr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Sporings QR"][$lang]; ?></a></li>
+												  <li><a data-toggle="tab" href="#fullqr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Bokmerke QR"][$lang]; ?></a></li>
 												</ul>
 												<div class="tab-content">
-												  <div class="tab-pane active" style="text-align: center; height: 150px;" id="barcode<?php echo $package["packageNumber"]; ?>">
-												  	<img style="border:0px solid black; height: 100px; width: 330px" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package["packageNumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
+												  <div class="tab-pane active" style="text-align: center; height: 150px;" id="barcode<?php echo $package_object["trackingnumber"]; ?>">
+												  	<img style="border:0px solid black; height: 100px; width: 330px" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package_object["trackingnumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
 												  </div>
-												  <div class="tab-pane" style="text-align: center; height: 150px;" id="qr<?php echo $package["packageNumber"]; ?>">
-												  	<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; ?><?php echo $package["packageNumber"]; ?> " src="<?php echo getQRCode($package["packageNumber"]); ?>" />
+												  <div class="tab-pane" style="text-align: center; height: 150px;" id="qr<?php echo $package_object["trackingnumber"]; ?>">
+												  	<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"]; ?> " src="<?php echo getQRCode($package["packageNumber"]); ?>" />
 												  </div>
-												  <div class="tab-pane" style="text-align: center; height: 150px;" id="fullqr<?php echo $package["packageNumber"]; ?>">
-												  	<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; ?><?php echo $package["packageNumber"]; ?> " src="<?php echo getFullQRCode($package["packageNumber"]); ?>" />
+												  <div class="tab-pane" style="text-align: center; height: 150px;" id="fullqr<?php echo $package_object["trackingnumber"]; ?>">
+												  	<img style="border:0px solid black;" alt="<?php
+														echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"];
+														?>" src="<?php
+														echo getFullQRCode(urlencode(base64_encode(json_encode(array($package_object)))));
+														?>" />
 												  </div>
 												</div>
 												<script>
 													$(function () {
-														$('#codes<?php echo $trackingNumber; ?>
+														$('#codes<?php echo $package_object["trackingnumber"]; ?>
 														a:last').tab('show');
 													})
 												</script>
