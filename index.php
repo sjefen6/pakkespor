@@ -288,7 +288,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 									<div class="alert span12 alert-error">
 										<p><?php echo $t["Feils&oslash;kings info"][$lang]; ?>:</p>
 										<pre>Input: <?php 
-											echo $trackingNumber . "\n";
+											echo $package_object["trackingnumber"] . "\n";
 											var_dump($shipment);
 										?>
 										</pre>
