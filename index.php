@@ -204,8 +204,6 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				padding-right: 15px;
 				padding-left: 15px;
 				padding-bottom: 15px;
-				page-break-after: always;
-				page-break-inside: avoid;
 			}
 
 			.navbar .nav, .navbar .nav > li {
@@ -224,13 +222,21 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				.noPrint {
 					display: none;
 				}
+
+				.shipment  {
+					page-break-after: always;
+					page-break-inside: avoid;
+				}
+
+				.shipment:last-child {
+					page-break-after: avoid;
+				}
 			}
 		</style>
 	</head>
 	<body>
-		<div class="container">
-			<!-- Menu -->
-			<div class="navbar navbar-static noPrint">
+		<div class="container"> <!-- container -->
+			<div class="navbar navbar-static noPrint"> <!-- Menu -->
 				<div class="plz-center" style="margin: 0 auto; text-align: center; width: 433px;">
 					<form class="navbar-search" method="get">
 						<div class="input-append">
@@ -245,14 +251,14 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 					</a>
 					<ul class="nav">
 						<li class="dropdown">
-							<button class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-info-sign"></i></button>
-							<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+							<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-info-sign"></i></button>
+							<ul class="dropdown-menu pull-right" role="menu">
 								<li><?php echo $t["infotekst"][$lang]; ?></li>
 							</ul>
 						</li>
 						<li class="dropdown">
-							<button class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-qrcode"></i></button>
-							<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+							<button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-qrcode"></i></button>
+							<ul class="dropdown-menu pull-right" role="menu">
 								<li>
 									<a href="<?php
 										echo getFullURL(urlencode(base64_encode(json_encode($trackingNumbers_json))));
@@ -264,23 +270,20 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 						</li>
 					</ul>
 				</div>
-			</div>
-			<?php
+			</div> <!-- /Menu --><?php
 			foreach ($trackingNumbers_json as $package_object) {
 				$shipments = getTrackingInfo($package_object["trackingnumber"]);
-				// var_dump($trackingNumber);
-				// var_dump($shipment);
 				// Foreach shipment (usually only 1)
-				foreach ($shipments["consignmentSet"] as $shipment){
-					?>
-					<div class="row-fluid">
-						<div class="shipment span12" style="min-width: 433px;">
+				foreach ($shipments["consignmentSet"] as $shipment){ ?>
+
+					<div class="row-fluid shipment"> <!-- row -->
+						<div class="span12" style="min-width: 433px;"> <!-- shipment -->
 							<span><?php
 								echo $t["Sending"][$lang]; ?>: <?php
 								echo (!empty($shipment["consignmentId"]) ? $shipment["consignmentId"] : $package_object["trackingnumber"]);
 								echo (!empty($package_object["name"]) ? " - " . htmlspecialchars($package_object["name"]) : "");
-							 ?></span>
-							<a href="/?remove=<?php echo $package_object["trackingnumber"]; ?>" type="button" class="close noPrint" aria-hidden="true">&times;</a>
+							?></span>
+							<a href="/?remove=<?php echo $package_object["trackingnumber"]; ?>" class="close noPrint" aria-hidden="true">&times;</a>
 							<?php
 							if(!empty($shipment["error"])){
 								?>
@@ -295,187 +298,200 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 									</div>
 								</div>
 								<?php
-								continue;
-							}
-							foreach ($shipment["packageSet"] as $package){
-								?>
-								<div class="row-fluid">
-									<div class="package span12">
-										<h1><?php echo $package["packageNumber"]; ?></h1>
-										<div class="row-fluid">
-											<div class="span6">
-												<table class="table">
-													<?php
-													if(!empty($package["statusDescription"])){
-														?>
-														<tr>
-															<th><?php echo $t["Status"][$lang]; ?>:</th>
-															<td><?php echo $package["statusDescription"]; ?></td>
-														</tr>
-													<?php }
-													if(!empty($package["pickupCode"])){
-														?>
-														<tr>
-															<th><?php echo $t["Hentekode"][$lang]; ?>:</th>
-															<td><?php echo $package["pickupCode"]; ?></td>
-														</tr>
-													<?php } ?>
-												</table>
-												<div class="accordion-group">
-													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
-													</div>
-													<div id="collapseDetails<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse">
-														<table class="table">
+							} else {
+								foreach ($shipment["packageSet"] as $package){
+									?>
+									<div class="row-fluid"> <!-- row -->
+										<div class="package span12"> <!-- package -->
+											<h1><?php echo $package["packageNumber"]; ?></h1>
+											<div class="row-fluid"> <!-- row -->
+												<div class="span6"> <!-- left side -->
+													<table class="table">
+														<?php
+														if(!empty($package["statusDescription"])){
+															?>
 															<tr>
-																<th><?php echo $t["Sendings nummer"][$lang]; ?>:</th>
-																<td><?php echo $shipment["consignmentId"]; ?></td>
+																<th><?php echo $t["Status"][$lang]; ?>:</th>
+																<td><?php echo $package["statusDescription"]; ?></td>
 															</tr>
+														<?php }
+														if(!empty($package["pickupCode"])){
+															?>
 															<tr>
-																<th><?php echo $t["Pakkenummer"][$lang]; ?>:</th>
-																<td><?php echo $package["packageNumber"]; ?></td>
+																<th><?php echo $t["Hentekode"][$lang]; ?>:</th>
+																<td><?php echo $package["pickupCode"]; ?></td>
 															</tr>
-															<tr>
-																<th><?php echo $t["Antall pakker"][$lang]; ?>:</th>
-																<td><?php echo sizeof($shipment["packageSet"]); ?></td>
-															</tr>
-															<tr>
-																<th><?php echo $t["Pakketype"][$lang]; ?>:</th>
-																<td><?php echo $package["productName"]; ?></td>
-															</tr>
-															<tr>
-																<th><?php echo $t["Vekt"][$lang]; ?>:</th>
-																<td><?php echo $package["weightInKgs"]; ?></td>
-															</tr>
-															<tr>
-																<th><?php echo $t["Avsender"][$lang]; ?>:</th>
-																<td><?php echo $package["senderName"]; ?></td>
-															</tr>
-															<tr>
-																<th><?php echo $t["Mottaker"][$lang]; ?>:</th>
-																<td><?php
-																	if (!empty($package["recipientAddress"]["addressLine1"]))
-																		echo $package["recipientAddress"]["addressLine1"] . "<br>";
-																	if (!empty($package["recipientAddress"]["addressLine2"]))
-																		echo $package["recipientAddress"]["addressLine2"] . "<br>";
-																	if (!empty($package["recipientAddress"]["postalCode"]))
-																		echo $package["recipientAddress"]["postalCode"];
-																	if (!empty($package["recipientAddress"]["postalCode"]) && !empty($package["recipientAddress"]["city"]))
-																		echo " ";
-																	if (!empty($package["recipientAddress"]["city"]))
-																		echo $package["recipientAddress"]["city"] . "<br>";
-																	if (!empty($package["countryCode"]))
-																		echo $package["countryCode"];
-																	if (!empty($package["recipientAddress"]["countryCode"]) && !empty($package["recipientAddress"]["country"]))
-																		echo " ";
-																	if (!empty($package["country"]))
-																		echo $package["country"];
-																?></td>
-															</tr>
-                                                                                                                        <tr>
-                                                                                                                                <th><?php echo $t["Sendingsnavn"][$lang]; ?>:</th>
-                                                                                                                                <td style="padding: 0px;">
-																	<form class="form-inline" style="margin-bottom: 0px;" method="post">
-																		<input id="shipmentName" name="shipmentName" type="text" class="input-small" placeholder="<?php echo $t["Navn"][$lang]; ?>" value="<?php echo htmlspecialchars($package_object["name"]); ?>">
-																		<input id="trackingnumberToName" name="trackingnumberToName" type="hidden" value="<?php echo $package_object["trackingnumber"]; ?>" >
-																		<button type="submit" class="btn"><?php echo $t["Lagre"][$lang]; ?></button>
-																	</form>
-																</td>
-                                                                                                                        </tr>
-														</table>
-													</div>
-												</div>
-												<div class="accordion-group">
-													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
-													</div>
-													<div id="collapseShipping<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse in">
-														<table class="table-striped">
-															<tr>
-																<th><?php echo $t["Hendelse"][$lang]; ?></th>
-																<th><?php echo $t["Tid"][$lang]; ?></th>
-																<th><?php echo $t["Sted"][$lang]; ?></th>
-															</tr>
-															<?php
-															foreach ($package["eventSet"] as $event) {
-																?>
+														<?php } ?>
+													</table>
+													<div class="accordion-group"> <!-- details -->
+														<div class="accordion-heading">
+															<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
+														</div>
+														<div id="collapseDetails<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse">
+															<table class="table">
 																<tr>
-																	<td><?php echo $event["description"]; ?></td>
-																	<td><?php echo date($t["tidsformat"][$lang], strtotime($event["dateIso"])); ?></td>
+																	<th><?php echo $t["Sendings nummer"][$lang]; ?>:</th>
+																	<td><?php echo $shipment["consignmentId"]; ?></td>
+																</tr>
+																<tr>
+																	<th><?php echo $t["Pakkenummer"][$lang]; ?>:</th>
+																	<td><?php echo $package["packageNumber"]; ?></td>
+																</tr>
+																<tr>
+																	<th><?php echo $t["Antall pakker"][$lang]; ?>:</th>
+																	<td><?php echo sizeof($shipment["packageSet"]); ?></td>
+																</tr>
+																<tr>
+																	<th><?php echo $t["Pakketype"][$lang]; ?>:</th>
+																	<td><?php echo $package["productName"]; ?></td>
+																</tr>
+																<tr>
+																	<th><?php echo $t["Vekt"][$lang]; ?>:</th>
+																	<td><?php echo $package["weightInKgs"]; ?></td>
+																</tr>
+																<tr>
+																	<th><?php echo $t["Avsender"][$lang]; ?>:</th>
+																	<td><?php echo $package["senderName"]; ?></td>
+																</tr>
+																<tr>
+																	<th><?php echo $t["Mottaker"][$lang]; ?>:</th>
 																	<td><?php
-																		$noloc = empty($event["city"]) || empty($event["country"]);
-																		echo $event["city"] . ($noloc ? "" : ", ") . $event["country"];
+																		if (!empty($package["recipientAddress"]["addressLine1"]))
+																			echo $package["recipientAddress"]["addressLine1"] . "<br>";
+																		if (!empty($package["recipientAddress"]["addressLine2"]))
+																			echo $package["recipientAddress"]["addressLine2"] . "<br>";
+																		if (!empty($package["recipientAddress"]["postalCode"]))
+																			echo $package["recipientAddress"]["postalCode"];
+																		if (!empty($package["recipientAddress"]["postalCode"]) && !empty($package["recipientAddress"]["city"]))
+																			echo " ";
+																		if (!empty($package["recipientAddress"]["city"]))
+																			echo $package["recipientAddress"]["city"] . "<br>";
+																		if (!empty($package["countryCode"]))
+																			echo $package["countryCode"];
+																		if (!empty($package["recipientAddress"]["countryCode"]) && !empty($package["recipientAddress"]["country"]))
+																			echo " ";
+																		if (!empty($package["country"]))
+																			echo $package["country"];
 																	?></td>
 																</tr>
-															<?php } ?>
-														</table>
+                                                                                                                	        <tr>
+                                                                                                                        	        <th><?php echo $t["Sendingsnavn"][$lang]; ?>:</th>
+                                                                                                                                	<td style="padding: 0px;">
+																		<form class="form-inline" style="margin-bottom: 0px;" method="post">
+																			<input id="shipmentName" name="shipmentName" type="text" class="input-small" placeholder="<?php echo $t["Navn"][$lang]; ?>" value="<?php echo htmlspecialchars($package_object["name"]); ?>">
+																			<input id="trackingnumberToName" name="trackingnumberToName" type="hidden" value="<?php echo $package_object["trackingnumber"]; ?>" >
+																			<button type="submit" class="btn"><?php echo $t["Lagre"][$lang]; ?></button>
+																		</form>
+																	</td>
+                                	                                                                                        </tr>
+															</table>
+														</div>
+													</div> <!-- details -->
+													<div class="accordion-group"> <!-- movements -->
+														<div class="accordion-heading">
+															<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
+														</div>
+														<div id="collapseShipping<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse in">
+															<table class="table-striped">
+																<tr>
+																	<th><?php echo $t["Hendelse"][$lang]; ?></th>
+																	<th><?php echo $t["Tid"][$lang]; ?></th>
+																	<th><?php echo $t["Sted"][$lang]; ?></th>
+																</tr>
+																<?php
+																foreach ($package["eventSet"] as $event) {
+																	?>
+																	<tr>
+																		<td><?php echo $event["description"]; ?></td>
+																		<td><?php echo date($t["tidsformat"][$lang], strtotime($event["dateIso"])); ?></td>
+																		<td><?php
+																			$noloc = empty($event["city"]) || empty($event["country"]);
+																			echo $event["city"] . ($noloc ? "" : ", ") . $event["country"];
+																		?></td>
+																	</tr>
+																<?php } ?>
+															</table>
+														</div>
+													</div> <!-- movements -->
+												</div> <!-- /left side -->
+												<div class="span6"> <!-- right side -->
+													<ul class="nav nav-tabs" style="margin-bottom: 0px;" id="codes<?php echo $package["packageNumber"]; ?>">
+														<li class="active"><a data-toggle="tab" href="#barcode<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Strekkode"][$lang]; ?></a></li>
+														<li><a data-toggle="tab" href="#qr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Sporings QR"][$lang]; ?></a></li>
+														<li><a data-toggle="tab" href="#fullqr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Bokmerke QR"][$lang]; ?></a></li>
+													</ul>
+													<div class="tab-content">
+														<div class="tab-pane active" style="text-align: center; height: 150px;" id="barcode<?php echo $package_object["trackingnumber"]; ?>">
+															<img style="border:0px solid black; height: 100px; width: 330px" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package_object["trackingnumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
+														</div>
+														<div class="tab-pane" style="text-align: center; height: 150px;" id="qr<?php echo $package_object["trackingnumber"]; ?>">
+												 			<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"]; ?> " src="<?php echo getQRCode($package["packageNumber"]); ?>" />
+														</div>
+														<div class="tab-pane" style="text-align: center; height: 150px;" id="fullqr<?php echo $package_object["trackingnumber"]; ?>">
+												 			<img style="border:0px solid black;" alt="<?php
+																echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"];
+																?>" src="<?php
+																echo getFullQRCode(urlencode(base64_encode(json_encode(array($package_object)))));
+																?>" />
+														</div>
 													</div>
-												</div>
-											</div>
-											<div class="span6">
-												<ul class="nav nav-tabs" style="margin-bottom: 0px;" id="codes<?php echo $package["packageNumber"]; ?>">
-												  <li class="active"><a data-toggle="tab" href="#barcode<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Strekkode"][$lang]; ?></a></li>
-												  <li><a data-toggle="tab" href="#qr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Sporings QR"][$lang]; ?></a></li>
-												  <li><a data-toggle="tab" href="#fullqr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Bokmerke QR"][$lang]; ?></a></li>
-												</ul>
-												<div class="tab-content">
-												  <div class="tab-pane active" style="text-align: center; height: 150px;" id="barcode<?php echo $package_object["trackingnumber"]; ?>">
-												  	<img style="border:0px solid black; height: 100px; width: 330px" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package_object["trackingnumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
-												  </div>
-												  <div class="tab-pane" style="text-align: center; height: 150px;" id="qr<?php echo $package_object["trackingnumber"]; ?>">
-												  	<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"]; ?> " src="<?php echo getQRCode($package["packageNumber"]); ?>" />
-												  </div>
-												  <div class="tab-pane" style="text-align: center; height: 150px;" id="fullqr<?php echo $package_object["trackingnumber"]; ?>">
-												  	<img style="border:0px solid black;" alt="<?php
-														echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"];
-														?>" src="<?php
-														echo getFullQRCode(urlencode(base64_encode(json_encode(array($package_object)))));
-														?>" />
-												  </div>
-												</div>
-												<script>
-													$(function () {
-														$('#codes<?php echo $package_object["trackingnumber"]; ?>
-														a:last').tab('show');
-													})
-												</script>
-											</div>
-										</div>
-									</div>
-								</div>
-							<?php } ?>
-						</div>
-					</div>
+													<script>
+														$(function () {
+															$('#codes<?php echo $package_object["trackingnumber"]; ?>
+															a:last').tab('show');
+														})
+													</script>
+												</div> <!-- /right side -->
+											</div> <!-- /row -->
+										</div> <!-- /package -->
+									</div> <!-- /row -->
+								<?php }
+							} ?>
+
+						</div> <!-- shipment -->
+					</div> <!-- /row -->
 				<?php } ?>
 			<?php } ?>
-			<div style="text-align: center; margin-top: 30px;" class="noPrint">
-				<p>
-					<?php echo $t["Laget av "][$lang]; ?><a href="http://www.sjefen6.no" target="_blank">@sjefen6</a>
-					<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="<?php echo $lang; ?>"><?php echo $t["F&oslash;lg"][$lang]; ?></a><br>
-					<div class="fb-like" data-href="http://www.pakkespor.no" data-width="75" data-layout="button_count" data-show-faces="false" data-send="false"></div>
-					<div style="display: inline-block; width: 60px; height: 25px;">
-						<div class="g-plusone" data-size="medium"></div>
-					</div>
-					<div style="display: inline-block; width: 83px; height: 25px;">
-						<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.pakkespor.no" data-text="<?php echo $t["twitter melding"][$lang]; ?>" data-lang="<?php echo $lang; ?>">Tweet</a>
-					</div><br>
-					<?php echo $t["Sporingsdata levert av "][$lang]; ?> <a href="http://www.posten.no" targer="_blank">posten.no</a>/<a href="http://www.bring.com" targer="_blank">bring.com</a><br>
-					<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?> <a href="/LICENSE" targer="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a> - <a href="/README.md" targer="_blank">readme</a>
-				</p>
-				<!-- Google Adsense -->
-				<script type="text/javascript">
-					<!--
-					google_ad_client ="ca-pub-4079891243190921";
-					/* tracking */
-					google_ad_slot = "5329852473";
-					google_ad_width = 468;
-					google_ad_height = 60;
-					//-->
-				</script>
-				<script type="text/javascript"
-				src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+			</div><!-- /container -->
+		<div style="text-align: center; margin-top: 30px;" class="noPrint"> <!-- footer -->
+			<p>
+				<?php
+				echo $t["Laget av "][$lang];
+				?><a href="http://www.sjefen6.no" target="_blank">@sjefen6</a>
+				<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="<?php
+					echo $lang;
+					?>"><?php
+					echo $t["F&oslash;lg"][$lang];
+				?></a>
+			</p>
+			<div class="fb-like" data-href="http://www.pakkespor.no" data-width="75" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+			<div style="display: inline-block; width: 60px; height: 25px;">
+				<div class="g-plusone" data-size="medium"></div>
 			</div>
-		</div><!-- /container -->
+			<div style="display: inline-block; width: 83px; height: 25px;">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.pakkespor.no" data-text="<?php
+					echo $t["twitter melding"][$lang];
+					?>" data-lang="<?php
+					echo $lang;
+				?>">Tweet</a>
+			</div>
+			<p>
+				<?php echo $t["Sporingsdata levert av "][$lang]; ?><a href="http://www.posten.no" target="_blank">posten.no</a>/<a href="http://www.bring.com" target="_blank">bring.com</a><br>
+				<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?><a href="/LICENSE" target="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a> - <a href="/README.md" target="_blank">readme</a>
+			</p>
+			<!-- Google Adsense -->
+			<script type="text/javascript">
+				<!--
+				google_ad_client ="ca-pub-4079891243190921";
+				/* tracking */
+				google_ad_slot = "5329852473";
+				google_ad_width = 468;
+				google_ad_height = 60;
+				//-->
+			</script>
+			<script type="text/javascript"
+				src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+		</div> <!-- /foooter -->
 		<!-- jquery -->
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		
