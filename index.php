@@ -171,7 +171,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 	header("Location: http://www.pakkespor.no/?json=" . urlencode(base64_encode(json_encode($trackingNumbers_json))), TRUE, 307);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $lang; ?>">
 	<head>
 		<title><?php echo $t["Pakkesporing for Posten/Bring"][$lang]; ?></title>
 		<meta charset="UTF-8">
@@ -230,6 +230,20 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 
 				.shipment:last-child {
 					page-break-after: avoid;
+				}
+			}
+
+			.footerad{
+				width:468px;
+				height:60px;
+			}
+
+			@media (max-width:480px) {
+				.footerad {
+					width: 320px;
+					height: 50px;
+					margin-left: -20px;
+					margin-right: -20px;
 				}
 			}
 		</style>
@@ -479,18 +493,16 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				<?php echo $t["Sporingsdata levert av "][$lang]; ?><a href="http://www.posten.no" target="_blank">posten.no</a>/<a href="http://www.bring.com" target="_blank">bring.com</a><br>
 				<?php echo $t["Kildekode tilgjengelig under "][$lang]; ?><a href="/LICENSE" target="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a> - <a href="/README.md" target="_blank">readme</a>
 			</p>
-			<!-- Google Adsense -->
-			<script type="text/javascript">
-				<!--
-				google_ad_client ="ca-pub-4079891243190921";
-				/* tracking */
-				google_ad_slot = "5329852473";
-				google_ad_width = 468;
-				google_ad_height = 60;
-				//-->
+			<!-- New responsive Adsense -->
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- tracking -->
+			<ins class="adsbygoogle footerad"
+			     style="display:inline-block;"
+			     data-ad-client="ca-pub-4079891243190921"
+			     data-ad-slot="5329852473"></ins>
+			<script>
+				(adsbygoogle = window.adsbygoogle || []).push({});
 			</script>
-			<script type="text/javascript"
-				src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 		</div> <!-- /foooter -->
 		<!-- jquery -->
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
