@@ -206,6 +206,10 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				padding-bottom: 15px;
 			}
 
+			.shipment {
+				min-width: 380px;
+			}
+
 			.navbar .nav, .navbar .nav > li {
 				float: none;
 				display: inline-block;
@@ -244,6 +248,11 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 					height: 50px;
 					margin-left: -20px;
 					margin-right: -20px;
+				}
+				body, .package {
+					padding-right: 0px;
+					padding-left: 0px;
+					border-radius: 0px;
 				}
 			}
 		</style>
@@ -291,7 +300,7 @@ if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
 				foreach ($shipments["consignmentSet"] as $shipment){ ?>
 
 					<div class="row-fluid shipment"> <!-- row -->
-						<div class="span12" style="min-width: 433px;"> <!-- shipment -->
+						<div class="span12 shipment"> <!-- shipment -->
 							<span><?php
 								echo $t["Sending"][$lang]; ?>: <?php
 								echo (!empty($shipment["consignmentId"]) ? $shipment["consignmentId"] : $package_object["trackingnumber"]);
