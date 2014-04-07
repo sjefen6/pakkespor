@@ -1,0 +1,71 @@
+div {
+	/*border:1px solid black;*/
+}
+body {
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background-color: #f5f5f5;
+}
+
+.package {
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	background-color: #ffffff;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-right: 15px;
+	padding-left: 15px;
+	padding-bottom: 15px;
+}
+
+.shipment {
+	min-width: 380px;
+	}
+
+.navbar .nav, .navbar .nav > li {
+	float: none;
+	display: inline-block;
+	*display: inline; /* ie7 fix */
+	*zoom: 1; /* hasLayout ie7 trigger */
+	vertical-align: top;
+}
+
+.twitter-follow-button {
+	margin-bottom: -5px;
+}
+
+@media print {
+	.noPrint {
+		display: none;
+	}
+
+	.shipment  {
+		page-break-after: always;
+		page-break-inside: avoid;
+	}
+
+	.shipment:last-child {
+		page-break-after: avoid;
+	}
+}
+
+.footerad{
+	width:468px;
+	height:60px;
+}
+
+@media (max-width:480px) {
+	.footerad {
+		width: 320px;
+		height: 50px;
+		margin-left: -20px;
+		margin-right: -20px;
+	}
+
+	body, .package {
+		padding-right: 0px;
+		padding-left: 0px;
+		border-radius: 0px;
+	}
+}
