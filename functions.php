@@ -161,6 +161,6 @@ function addTrackingNumber($trackingnumber, $name = ""){
 	}
 }
 
-if($_SERVER["SERVER_NAME"] != "www.pakkespor.no")
+if($_SERVER["HTTP_HOST"] != "www.pakkespor.no")
 	header("Location: http://www.pakkespor.no/?json=" . urlencode(base64_encode(json_encode($trackingNumbers_json))), TRUE, 307);
 ?>
