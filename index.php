@@ -293,6 +293,7 @@ require 'functions.php';
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		
 		  ga('create', 'UA-2122863-17', 'pakkespor.no');
+		  ga('require', 'displayfeatures');
 		  ga('send', 'pageview');
 		
 		</script>
