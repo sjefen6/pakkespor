@@ -127,8 +127,8 @@ function getFullQRCode($data) {
 }
 
 function getFullURL($data) {
-	$https = isset($_SERVER['HTTPS']);
-	return ($https ? "https://" : "http://") . $_SERVER['SERVER_NAME'] . "/?json=" . $data;
+	$https = $_SERVER['HTTPS'] == 'on';
+	return ($https ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . "/?json=" . $data;
 }
 
 function cleanString($data){
