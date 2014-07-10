@@ -18,8 +18,8 @@ require 'functions.php';
 			echo "<meta http-equiv=\"refresh\" content=\"600\">\n";
 		?>
 		<!-- Bootstrap -->
-		<link rel="stylesheet" type="text/css" media="screen" href="/bs/css/bootstrap.min.css" >
-		<link rel="stylesheet" type="text/css" media="print" href="/bs/css/bootstrap.min.css">
+                <link rel="stylesheet" type="text/css" media="screen" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css" >
+		<link rel="stylesheet" type="text/css" media="print" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css">
 		<meta name="description" content="<?php echo $t["meta description"][$lang]; ?>">
 		<link rel="stylesheet" type="text/css" href="/style.css">
 	</head>
@@ -283,7 +283,7 @@ require 'functions.php';
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		
 		<!-- bootstrap -->
-		<script src="/bs/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css"></script>
 		
 		<!-- Google Analytics -->
 		<script>
