@@ -283,7 +283,7 @@ require 'functions.php';
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		
 		<!-- bootstrap -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 		
 		<!-- Google Analytics -->
 		<script>
