@@ -18,7 +18,8 @@ require 'functions.php';
 			echo "<meta http-equiv=\"refresh\" content=\"600\">\n";
 		?>
 		<!-- Bootstrap -->
-                <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css" >
+                <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" >
+                <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" >
 		<meta name="description" content="<?php echo $t["meta description"][$lang]; ?>">
 		<link rel="stylesheet" type="text/css" href="/style.css">
 	</head>
