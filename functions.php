@@ -6,6 +6,12 @@ $trackingNumbers_json = array();
 
 $autorefresh = htmlspecialchars(@$_COOKIE["autorefresh"]);
 
+$lang = "en";
+$browserlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+if(in_array($browserlang,array("no","nb","nn"))){
+	$lang = "no";
+}
+
 if (!empty($_COOKIE["trackingNumbers_json"])) {
 	$incoming = json_decode($_COOKIE["trackingNumbers_json"], true);
 	foreach ($incoming as $package){
