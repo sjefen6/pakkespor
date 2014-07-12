@@ -133,8 +133,7 @@ function getFullQRCode($data) {
 }
 
 function getFullURL($data) {
-	$https = $_SERVER['HTTPS'] == 'on';
-	return ($https ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . "/?json=" . $data;
+	return (SSL ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . "/?json=" . $data;
 }
 
 function cleanString($data){
@@ -167,6 +166,6 @@ function addTrackingNumber($trackingnumber, $name = ""){
 	}
 }
 
-if($_SERVER["HTTP_HOST"] != "www.pakkespor.no")
-	header("Location: http://www.pakkespor.no/?json=" . urlencode(base64_encode(json_encode($trackingNumbers_json))), TRUE, 307);
+if($_SERVER["HTTP_HOST"] != URL)
+	header("Location: http://" . URL . "/?json=" . urlencode(base64_encode(json_encode($trackingNumbers_json))), TRUE, 307);
 ?>

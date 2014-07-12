@@ -2,6 +2,9 @@
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set("Europe/Oslo");
 
+error_reporting(E_ALL);
+
+require 'config.php';
 require 'lang.php';
 require 'functions.php';
 ?>
@@ -251,12 +254,12 @@ require 'functions.php';
 					echo $t["F&oslash;lg"][$lang];
 				?></a>
 			</p>
-			<div class="fb-like" data-href="http://www.pakkespor.no" data-width="75" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+			<div class="fb-like" data-href="http://<?= URL ?>" data-width="75" data-layout="button_count" data-show-faces="false" data-send="false"></div>
 			<div style="display: inline-block; width: 60px; height: 25px;">
 				<div class="g-plusone" data-size="medium"></div>
 			</div>
 			<div style="display: inline-block; width: 83px; height: 25px;">
-				<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.pakkespor.no" data-text="<?php
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://<?= URL ?>" data-text="<?php
 					echo $t["twitter melding"][$lang];
 					?>" data-lang="<?php
 					echo $lang;
@@ -271,8 +274,8 @@ require 'functions.php';
 			<!-- tracking -->
 			<ins class="adsbygoogle footerad"
 			     style="display:inline-block;"
-			     data-ad-client="ca-pub-4079891243190921"
-			     data-ad-slot="5329852473"></ins>
+			     data-ad-client="<?= GAS_AD_CLIENT ?>"
+			     data-ad-slot="<?= GAS_AD_SLOT ?>"></ins>
 			<script>
 				(adsbygoogle = window.adsbygoogle || []).push({});
 			</script>
@@ -290,7 +293,7 @@ require 'functions.php';
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		
-		  ga('create', 'UA-2122863-17', 'pakkespor.no');
+		  ga('create', '<?= GAN_UA ?>', '<?= GAN_NAME ?>');
 		  ga('require', 'displayfeatures');
 		  ga('send', 'pageview');
 		
