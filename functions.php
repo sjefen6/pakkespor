@@ -8,7 +8,7 @@ $autorefresh = htmlspecialchars(@$_COOKIE["autorefresh"]);
 
 $lang = "en";
 $browserlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-if(in_array($browserlang,array("no","nb","nn"))){
+if(in_array($browserlang,array("no","nb","nn",""))){
 	$lang = "no";
 }
 
