@@ -19,8 +19,9 @@ require 'functions.php';
 		<!-- Bootstrap -->
                 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" >
                 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" >
-		<meta name="description" content="<?php echo $t["meta description"][$lang]; ?>">
 		<link rel="stylesheet" type="text/css" href="/style.css">
+		<link rel="alternate" hreflang="x-default" href="http://<?= URL ?>">
+		<meta name="description" content="<?php echo $t["meta description"][$lang]; ?>">
 	</head>
 	<body>
 		<div class="container"> <!-- container -->
