@@ -84,6 +84,18 @@ require 'functions.php';
 											var_dump($shipment);
 										?>
 										</pre>
+                	                                                        <form action="http://www.pakkesporing.no/post" method="post" target="fb<?= $package_object["trackingnumber"] ?>" style="float: left">
+	                                                                                <input id="number" name="number" type="hidden" value="<?= $package_object["trackingnumber"] ?>">
+        	                                                                        <input id="v" name="v" type="hidden" value="K">
+                                        	                                        <input type="submit" value="Pr&oslash;v pakkesporing.no" onclick="$('#fb<?= $package_object["trackingnumber"] ?>').css('height', '500px');" />
+                        	                                                </form>
+
+                                                                                <form action="http://www.postnordlogistics.no/minside/SOPS" method="get" target="fb<?= $package_object["trackingnumber"] ?>">
+                                                                                        <input id="ref" name="ref" type="hidden" value="<?= $package_object["trackingnumber"] ?>">
+                                                                                        <input type="submit" value="Pr&oslash;v postnordlogistics.no" onclick="$('#fb<?= $package_object["trackingnumber"] ?>').css('height', '500px');" />
+                                                                                </form>
+
+                                	                                        <iframe id="fb<?= $package_object["trackingnumber"] ?>" name="fb<?= $package_object["trackingnumber"] ?>" style="width:100%; height: 0px; border: none;"></iframe>
 									</div>
 								</div>
 								<?php
