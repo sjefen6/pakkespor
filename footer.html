@@ -1,0 +1,74 @@
+<!-- footer -->
+<div style="text-align: center; margin-top: 30px;" class="footer noPrint">
+  <p>Laget av<a href="http://www.sjefen6.no" target="_blank">@sjefen6</a>
+    <a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="nb">F&oslash;lg</a>
+  </p>
+  <div class="fb-like" data-href="http://www.pakkespor.no" data-width="75" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+  <div style="display: inline-block; width: 60px; height: 25px;">
+    <div class="g-plusone" data-size="medium"></div>
+  </div>
+  <div style="display: inline-block; width: 83px; height: 25px;">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://<?= URL ?>" data-text="Venter i spenning på pakken min. Sporer den via http://pakkespor.no" data-lang="nb">Tweet</a>
+  </div>
+  <p>Sporingsdata levert av <a href="http://www.posten.no" target="_blank">posten.no</a>/<a href="http://www.bring.com" target="_blank">bring.com</a><br>
+    Kildekode tilgjengelig under <a href="/LICENSE" target="_blank">GPL v3.0</a> @ <a href="https://github.com/sjefen6/pakkespor/" target="_blank">github</a> - <a href="/README.md" target="_blank">readme</a>
+  </p>
+  <!-- New responsive Adsense -->
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- tracking -->
+  <ins class="adsbygoogle footerad"
+       style="display:inline-block;"
+       data-ad-client="<?= GAS_AD_CLIENT ?>"
+       data-ad-slot="<?= GAS_AD_SLOT ?>"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div> <!-- /foooter -->
+
+
+		<!-- Google Analytics -->
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', '<?= GAN_UA ?>', '<?= GAN_NAME ?>');
+		  ga('require', 'displayfeatures');
+		  ga('send', 'pageview');
+
+		</script>
+
+		<!-- twitter -->
+		<script>
+			! function(d, s, id) {
+				var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+				if (!d.getElementById(id)) {
+					js = d.createElement(s);
+					js.id = id;
+					js.src = p + '://platform.twitter.com/widgets.js';
+					fjs.parentNode.insertBefore(js, fjs);
+				}
+			}(document, 'script', 'twitter-wjs');
+		</script>
+
+		<!-- facebook -->
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/nb_NO/all.js#xfbml=1&appId=159452564099998";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+
+		<!-- Google Plus -->
+		<script type="text/javascript">
+		  window.___gcfg = {lang: '<?php echo $lang; ?>'};
+
+		  (function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		  })();
+		</script>
