@@ -292,7 +292,7 @@ require 'functions.php';
 			</script>
 		</div> <!-- /foooter -->
 		<!-- jquery -->
-		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="//code.jquery.com/jquery-latest.min.js"></script>
 		
 		<!-- bootstrap -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
