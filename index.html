@@ -39,22 +39,33 @@
 	</nav>
 
 	<main class="wrap">
-		<div id="main" class="container clear-top">
-
+		<div class="container container-wrap">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">370716485358198490</h3>
+				</div>
+				<div class="panel-body">
+					Panel content
+				</div>
+			</div>
 		</div>
 	</main>
 	<footer class="navbar navbar-default footer noPrint">
 		<div class="container">
-			<span class="line">Laget av </span>
+			<span class="line social-text">Laget av </span>
 			<a href="https://twitter.com/sjefen6" class="twitter-follow-button" data-show-count="false" data-lang="no">@sjefen6</a><br>
-			<iframe src="https://ghbtns.com/github-btn.html?user=sjefen6&repo=pakkespor&type=star&count=true" frameborder="0" scrolling="0" width="83px" height="20px"></iframe>
-			<div class="fb-like" data-href="http://www.pakkespor.no" data-width="70" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
-			<div style="display: inline-block; width: 60px; height: 25px;">
-				<div class="g-plusone" data-size="medium"></div>
-			</div>
-			<div style="display: inline-block; width: 83px; height: 25px;">
-				<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://<?= URL ?>" data-text="Venter i spenning på pakken min. Sporer den via http://pakkespor.no" data-lang="no">Tweet</a>
-			</div>
+			<span class="line social">
+				<iframe src="https://ghbtns.com/github-btn.html?user=sjefen6&repo=pakkespor&type=star&count=true" class="social-button" frameborder="0" scrolling="0"></iframe>
+				<div class="fb-like " data-href="http://www.pakkespor.no" data-width="70px" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
+			</span>
+			<span class="line social">
+				<div class="social-button">
+					<div class="g-plusone" data-href="http://www.pakkespor.no" data-size="medium" data-annotation="none" data-width="80" data-recommendations=false></div>
+				</div>
+				<div class="social-button">
+					<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.pakkspor.no" data-text="Venter i spenning på pakken min. Sporer den via " data-lang="no">Tweet</a>
+				</div>
+			</span>
 			<br>
 			<span class="line">Sporingsdata levert av </span>
 			<span class="line"><a href="http://www.posten.no" target="_blank">posten.no</a>/<a href="http://www.bring.com" target="_blank">bring.com</a></span><br>
@@ -97,14 +108,6 @@ ga('send', 'pageview');
 }(document, 'script', 'facebook-jssdk'));</script>
 
 <!-- Google Plus -->
-<script type="text/javascript">
-window.___gcfg = {lang: 'no'};
-
-(function() {
-	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-	po.src = 'https://apis.google.com/js/plusone.js';
-	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-})();
-</script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 </body>
 </html>

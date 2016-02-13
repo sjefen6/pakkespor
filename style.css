@@ -1,11 +1,24 @@
 span.line {
   display: inline-block;
+}
+
+span.social {
+  height: 25px;
+}
+
+/* Used for made by text */
+.social-text {
   vertical-align: top;
 }
 
-.fb-like {
-  vertical-align: top;
+/* Used for footer buttons */
+.social-button {
+  display: inline-block;
+  vertical-align: bottom;
+  width: 80px;
+  height: 20px;
 }
+
 
 body {
   display: flex;
@@ -15,6 +28,11 @@ body {
 
 main.wrap {
   flex: 1;
+}
+
+.container-wrap {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .footer {
