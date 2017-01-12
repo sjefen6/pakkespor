@@ -22,7 +22,7 @@ if (!empty($_COOKIE["trackingNumbers_json"])) {
 if (!empty($_GET["json"])){
 	$incoming = json_decode(base64_decode(@$_GET["json"]), true);
 	foreach ($incoming as $package)
-		addTrackingNumber($package["trackingnumber"], $package["name"]);
+	addTrackingNumber($package["trackingnumber"], $package["name"]);
 }
 
 if (!empty($_COOKIE["trackingNumbers"]) || !empty($_GET["trackingNumbers"]) || !empty($_POST["trackingNumber"])) {
@@ -32,7 +32,7 @@ if (!empty($_COOKIE["trackingNumbers"]) || !empty($_GET["trackingNumbers"]) || !
 
 	//Adds dsv values to json
 	foreach ($trackingNumbers as $trackingnumber)
-		addTrackingNumber($trackingnumber);
+	addTrackingNumber($trackingnumber);
 }
 
 if (!empty($_GET["remove"])) {
@@ -46,11 +46,11 @@ if (!empty($_GET["remove"])) {
 	}
 
 	//JSON
-        foreach ($trackingNumbers_json as $key => $value) {
-                if ($value["trackingnumber"] == $get) {
-                        unset($trackingNumbers_json[$key]);
-                }
-        }
+	foreach ($trackingNumbers_json as $key => $value) {
+		if ($value["trackingnumber"] == $get) {
+			unset($trackingNumbers_json[$key]);
+		}
+	}
 
 
 	if (empty($trackingNumbers)) {
@@ -101,19 +101,19 @@ function getTrackingInfo($trNumber) {
 	$json_url = "http://sporing.bring.no/sporing.json?lang=" . $lang . "&q=" . $trNumber;
 
 	$ctx = stream_context_create(array(
-	    'http' => array(
-	        'timeout' => 30
-	        )
-	    )
-	);
+		'http' => array(
+			'timeout' => 30
+		)
+	)
+);
 
-	$json = file_get_contents($json_url, FALSE, $ctx);
+$json = file_get_contents($json_url, FALSE, $ctx);
 
-	//$json = file_get_contents($json_url);
+//$json = file_get_contents($json_url);
 
-	// var_dump($json);
+// var_dump($json);
 
-	return json_decode($json, TRUE);
+return json_decode($json, TRUE);
 }
 
 function getBarcode($data) {
@@ -121,11 +121,13 @@ function getBarcode($data) {
 }
 
 function getQRCode($data) {
-	$size = "150x150";
-	$correction = "L|2";
+	//$size = "150x150";
+	$size = "230x230";
+	//$correction = "L&#124;2";
 	$encoding = "UTF-8";
 
-	return "https://chart.googleapis.com/chart?cht=qr&amp;chs=$size&amp;chl=$data&amp;choe=$encoding&amp;chld=$correction";
+	// return "https://chart.googleapis.com/chart?cht=qr&amp;chs=$size&amp;chl=$data&amp;choe=$encoding&amp;chld=$correction";
+	return "https://chart.googleapis.com/chart?cht=qr&amp;chs=$size&amp;chl=$data&amp;choe=$encoding";
 }
 
 function getFullQRCode($data) {
@@ -152,14 +154,14 @@ function addTrackingNumber($trackingnumber, $name = ""){
 		$notADupe = true;
 		foreach ($trackingNumbers_json as $packageID => $package) {
 			if ($package["trackingnumber"] == $trackingnumber)
-				$notADupe = false;
+			$notADupe = false;
 		}
 
 		if($notADupe){
 			$temp = array("trackingnumber" => $trackingnumber,);
 
 			if (strlen($name) >= 1)
-				$temp["name"] = $name;
+			$temp["name"] = $name;
 
 			$trackingNumbers_json[] = $temp;
 		}
@@ -167,5 +169,5 @@ function addTrackingNumber($trackingnumber, $name = ""){
 }
 
 if($_SERVER["HTTP_HOST"] != URL)
-	header("Location: http://" . URL . "/?json=" . urlencode(base64_encode(json_encode($trackingNumbers_json))), TRUE, 307);
+header("Location: http://" . URL . "/?json=" . urlencode(base64_encode(json_encode($trackingNumbers_json))), TRUE, 307);
 ?>
