@@ -79,7 +79,7 @@ require 'functions.php';
 								<div class="row-fluid">
 									<div class="alert span12 alert-error">
 										<p><?php echo $t["Feils&oslash;kings info"][$lang]; ?>:</p>
-										<pre>Input: <?php 
+										<pre>Input: <?php
 											echo $package_object["trackingnumber"] . "\n";
 											var_dump($shipment);
 										?>
@@ -126,9 +126,9 @@ require 'functions.php';
 													</table>
 													<div class="accordion-group"> <!-- details -->
 														<div class="accordion-heading">
-															<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
+															<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseDetails<?php echo $package["packageNumber"]; ?>"> <?php echo $t["Detaljer"][$lang]; ?> </a>
 														</div>
-														<div id="collapseDetails<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse">
+														<div id="collapseDetails<?php echo $package["packageNumber"]; ?>" class="accordion-body collapse">
 															<table class="table">
 																<tr>
 																	<th><?php echo $t["Sendings nummer"][$lang]; ?>:</th>
@@ -190,9 +190,9 @@ require 'functions.php';
 													</div> <!-- details -->
 													<div class="accordion-group"> <!-- movements -->
 														<div class="accordion-heading">
-															<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $package_object["trackingnumber"]; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
+															<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseShipping<?php echo $package["packageNumber"]; ?>"> <?php echo $t["Bevegelser"][$lang]; ?> </a>
 														</div>
-														<div id="collapseShipping<?php echo $package_object["trackingnumber"]; ?>" class="accordion-body collapse in">
+														<div id="collapseShipping<?php echo $package["packageNumber"]; ?>" class="accordion-body collapse in">
 															<table class="table-striped">
 																<tr>
 																	<th><?php echo $t["Hendelse"][$lang]; ?></th>
@@ -217,20 +217,20 @@ require 'functions.php';
 												</div> <!-- /left side -->
 												<div class="span6"> <!-- right side -->
 													<ul class="nav nav-tabs" style="margin-bottom: 0px;" id="codes<?php echo $package["packageNumber"]; ?>">
-														<li class="active"><a data-toggle="tab" href="#barcode<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Strekkode"][$lang]; ?></a></li>
-														<li><a data-toggle="tab" href="#qr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Sporings QR"][$lang]; ?></a></li>
-														<li><a data-toggle="tab" href="#fullqr<?php echo $package_object["trackingnumber"]; ?>"><?php echo $t["Bokmerke QR"][$lang]; ?></a></li>
+														<li class="active"><a data-toggle="tab" href="#barcode<?php echo $package["packageNumber"]; ?>"><?php echo $t["Strekkode"][$lang]; ?></a></li>
+														<li><a data-toggle="tab" href="#qr<?php echo $package["packageNumber"]; ?>"><?php echo $t["Sporings QR"][$lang]; ?></a></li>
+														<li><a data-toggle="tab" href="#fullqr<?php echo $package["packageNumber"]; ?>"><?php echo $t["Bokmerke QR"][$lang]; ?></a></li>
 													</ul>
 													<div class="tab-content">
-														<div class="tab-pane active" style="text-align: center; height: 150px;" id="barcode<?php echo $package_object["trackingnumber"]; ?>">
-															<img style="border:0px solid black; height: 100px; width: 330px" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package_object["trackingnumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
+														<div class="tab-pane active" style="text-align: center; height: 150px;" id="barcode<?php echo $package["packageNumber"]; ?>">
+															<img style="border:0px solid black; height: 100px; width: 330px" alt="<?php echo $t["Strekkode for "][$lang]; ?><?php echo $package["packageNumber"]; ?> " src="<?php echo getBarcode($package["packageNumber"]); ?>" />
 														</div>
-														<div class="tab-pane" style="text-align: center; height: 150px;" id="qr<?php echo $package_object["trackingnumber"]; ?>">
-												 			<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"]; ?> " src="<?php echo getQRCode($package["packageNumber"]); ?>" />
+														<div class="tab-pane" style="text-align: center; height: 150px;" id="qr<?php echo $package["packageNumber"]; ?>">
+												 			<img style="border:0px solid black;" alt="<?php echo $t["QRkode for "][$lang]; echo $package["packageNumber"]; ?> " src="<?php echo getQRCode($package["packageNumber"]); ?>" />
 														</div>
-														<div class="tab-pane" style="text-align: center; height: 150px;" id="fullqr<?php echo $package_object["trackingnumber"]; ?>">
+														<div class="tab-pane" style="text-align: center; height: 150px;" id="fullqr<?php echo $package["packageNumber"]; ?>">
 												 			<img style="border:0px solid black;" alt="<?php
-																echo $t["QRkode for "][$lang]; echo $package_object["trackingnumber"];
+																echo $t["QRkode for "][$lang]; echo $package["packageNumber"];
 																?>" src="<?php
 																echo getFullQRCode(urlencode(base64_encode(json_encode(array($package_object)))));
 																?>" />
@@ -238,7 +238,7 @@ require 'functions.php';
 													</div>
 													<script>
 														$(function () {
-															$('#codes<?php echo $package_object["trackingnumber"]; ?>
+															$('#codes<?php echo $package["packageNumber"]; ?>
 															a:last').tab('show');
 														})
 													</script>
@@ -293,23 +293,23 @@ require 'functions.php';
 		</div> <!-- /foooter -->
 		<!-- jquery -->
 		<script src="//code.jquery.com/jquery-latest.min.js"></script>
-		
+
 		<!-- bootstrap -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-		
+
 		<!-- Google Analytics -->
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		
+
 		  ga('create', '<?= GAN_UA ?>', '<?= GAN_NAME ?>');
 		  ga('require', 'displayfeatures');
 		  ga('send', 'pageview');
-		
+
 		</script>
-		
+
 		<!-- twitter -->
 		<script>
 			! function(d, s, id) {
@@ -320,9 +320,9 @@ require 'functions.php';
 					js.src = p + '://platform.twitter.com/widgets.js';
 					fjs.parentNode.insertBefore(js, fjs);
 				}
-			}(document, 'script', 'twitter-wjs'); 
+			}(document, 'script', 'twitter-wjs');
 		</script>
-		
+
 		<!-- facebook -->
 		<div id="fb-root"></div>
 		<script>(function(d, s, id) {
@@ -336,7 +336,7 @@ require 'functions.php';
 		<!-- Google Plus -->
 		<script type="text/javascript">
 		  window.___gcfg = {lang: '<?php echo $lang; ?>'};
-		
+
 		  (function() {
 		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
 		    po.src = 'https://apis.google.com/js/plusone.js';
