@@ -19,6 +19,7 @@ require 'functions.php';
 	<link rel="stylesheet" type="text/css" href="/style.css">
 	<link rel="alternate" hreflang="x-default" href="http://<?= URL ?>">
 	<meta name="description" content="<?=$t["meta description"][$lang]?>">
+	<meta name="flattr:id" content="kxwwvj">
 </head>
 <body>
 	<div class="container"> <!-- container -->
