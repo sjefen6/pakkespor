@@ -74,21 +74,8 @@ require 'functions.php';
 							<div class="row-fluid">
 								<div class="alert span12 alert-error">
 									<p><?=$t["Feils&oslash;kings info"][$lang]?>:</p>
-									<pre>Input: <?=$package_object["trackingnumber"]?>
-										<?=var_dump($shipment)?>
-									</pre>
-									<form action="http://www.pakkesporing.no/post" method="post" target="fb<?= $package_object["trackingnumber"] ?>" style="float: left">
-										<input id="number" name="number" type="hidden" value="<?= $package_object["trackingnumber"] ?>">
-										<input id="v" name="v" type="hidden" value="K">
-										<input type="submit" value="Pr&oslash;v pakkesporing.no" onclick="$('#fb<?= $package_object["trackingnumber"] ?>').css('height', '500px');" />
-									</form>
-
-									<form action="http://www.postnordlogistics.no/minside/SOPS" method="get" target="fb<?= $package_object["trackingnumber"] ?>">
-										<input id="ref" name="ref" type="hidden" value="<?= $package_object["trackingnumber"] ?>">
-										<input type="submit" value="Pr&oslash;v postnordlogistics.no" onclick="$('#fb<?= $package_object["trackingnumber"] ?>').css('height', '500px');" />
-									</form>
-
-									<iframe id="fb<?= $package_object["trackingnumber"] ?>" name="fb<?= $package_object["trackingnumber"] ?>" style="width:100%; height: 0px; border: none;"></iframe>
+									<pre>Input: <?=$package_object["trackingnumber"]."\n"; var_dump($shipment)?></pre>
+									<a href="http://www.postnord.no/verktoy/transport-og-sporingsverktoy/nordisk-sporing#dynamicloading=true&shipmentid=<?= $package_object["trackingnumber"] ?>" target="_blank" class="btn">Pr&oslash;v postnord.no</a>
 								</div>
 							</div>
 							<?php
