@@ -158,8 +158,8 @@ final class Barcode39 {
         }
 
         // add start and stop symbols
-        //array_unshift($this->_code, "*");
-        //array_push($this->_code, "*");
+        array_unshift($this->_code, "*");
+        array_push($this->_code, "*");
     }
 
     /**
